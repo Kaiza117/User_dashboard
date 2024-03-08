@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Login Page</title>
+    </head>
+    <body>
+        <div> 
+            <h3>Test App</h3>
+            <a href="/index">Home</a>
+            <a href="/login">Login</a>
+        </div>
+
+        <div>
+            <h2>Login</h2>
+            <form action="/users/login" method="post">
+                {% csrf_token %}
+                <p>Email:<input class="fields" type="text" name="email"></p>
+                <p>Password:<input class="fields" type="password" name="password"></p>
+                <input class="btn" type="submit" value="login">
+            </form>
+            <a href="/register">Don't have an account? Register</a>
+        </div>
+        <div id="errors">
+            {% if messages %}
+                {% for message in messages %}
+                    <h3>{{message}}</h3>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </body>
+</html>

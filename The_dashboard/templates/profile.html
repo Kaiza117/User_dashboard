@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>User Homepage</title>
+    </head>
+    <body>
+        <div> 
+            <h3>Test App</h3>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/users/show/{{request.session.u_id}}">Profile</a>
+            <a href="/users/edit/{{request.session.u_id}}">Edit Profile</a>
+            <a href="/logout">Logout</a>
+        </div>
+        <div>
+            {% for user in user %}
+                <h3>{{user.first_name}} {{user.last_name}}</h3>
+                <p>Registered at: {{user.created_at}}</p>
+                <p>User ID: {{user.id}}</p>
+                <p>Email Address: {{user.email}}</p>
+                <p>Description: {{user.description}}</p>
+        </div>
+        <div>
+            <h2>Post a message:</h2>
+                <form action="/post/{{user.id}}" method="post">
+                    {% csrf_token %}
+                    <textarea id="messagebox" name="message" row="3" cols="80"></textarea>
+                    <input type="hidden" name="id" value="user.id">
+                    <input id="msgbtn" type="submit" value="Post a message!">
+            {% endfor %}
+            </form>
+        </div>
+        {% for message in message reversed %}
+        <h3 id="postdetails">{{message.message_author.first_name}} {{message.message_author.last_name}} - {{message.created_at|date:'F jS Y'}}</h3>
+        <p id="post">{{message.message}}</p>
+        <p id="micro">...posted {{message.created_at|timesince}} ago.</p>
+        {% for comment in comment_message.comments.all %}
+        <h4 id="commentdetails">{{comment.comment_author.first_name}} {{comment.comment_author.last_name}} - {{comment.created_at|date:'F jS Y'}}</h4>
+        <p id="comment">{{comment.comment}} {% if comment.comment_author.id == request.session.u_id %}{% endif %}</p>
+        <p id="micro">...posted {{comment.created_at|timesince}} ago.</p>
+        {% endfor %}
+        <div id="cmtdiv">
+            <h3 id="cmtheader">Post a comment:</h3>
+            <form action="/comment" method="post">
+                {% csrf_token %}
+                <input id ="commentbox" type="textarea" name="comment" row="1">
+                <input type="hidden" name="id" value="request.session['u_id']">
+                <input type="hidden" name="comment_message_id" value="{{comment_message.id}}">
+                <input id="cmtbtn" type="submit" value="Post a comment!">
+            </form>
+        </div>
+        {% endfor %}
+    </body>
+</html>

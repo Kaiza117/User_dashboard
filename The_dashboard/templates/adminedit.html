@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <div> 
+        <h3>Test App</h3>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/users/show/{{request.session.u_id}}">Profile</a>
+            <a href="/logout">Logout</a>
+        </div>
+        {% for user in user_data %}
+        <div> 
+            <h2>Edit User #{{user.id}}</h2>
+            <h3>Edit Information</h3>
+            <form action="/users/edit_users/{{request.session.u_id}}" method="post">
+                {% csrf_token %}
+                <input type="hidden"  name="u_id" value='{{user.id}}'>
+                Email Address:
+                <br><input type="text" name="email" placeholder='{{user.email}}'><br><br>
+                First Name:
+                <br><input type="text" name="first_name" placeholder='{{user.first_name}}'><br><br>
+                Last Name:
+                <br><input type="text" name="last_name" placeholder='{{user.last_name}}'><br><br>
+                User Level:
+                    <select name="user_level">
+                        <option value="1">Admin</option>
+                        <option value="2">Normal</option>
+                    </select>
+                <input type="submit" name="submit" value="Save"><br><br>
+            </form>
+        </div>
+        <div>
+            <h3>Change Password</h3>
+            <form action="/users/edit_users/{{user.id}}" method="post">
+                {% csrf_token %}
+                Password:
+                <br><input type="password" name="password"><br><br>
+                Password Confirmation:
+                <br><input type="password" name="password_confirmation"><br><br>
+                <input type="submit" name="submit" value="Update Password"><br><br>
+            </form>
+        </div>
+        {% endfor %}
+        <div id="errors">
+            {% if messages %}
+                {% for message in messages %}
+                    <h3>{{message}}</h3>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </body>
+</html>
